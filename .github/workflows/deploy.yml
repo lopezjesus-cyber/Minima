@@ -21,7 +21,7 @@ jobs:
         with:
           server: ${{ secrets.FTP_SERVER || 'ftpupload.net' }}
           username: ${{ secrets.FTP_USERNAME || 'if0_42953100' }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          password: ${{ secrets.FTP_PASSWORD || 'nxl1M7esHA'}}
           server-dir: htdocs/
           exclude: |
             **/.git*
