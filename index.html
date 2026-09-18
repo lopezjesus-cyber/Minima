@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MINIMA — Gestión de Tareas Minimalista</title>
+  <meta name="description" content="Servicio de gestión de tareas y productividad con diseño minimalista, elegante y monocromático.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="brand" id="brand-link">
+          <div class="brand-icon">M</div>
+          <span class="brand-name">MINIMA</span>
+        </a>
+        <span class="brand-badge">Tasks</span>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Vistas Rápidas -->
+        <div>
+          <div class="nav-section-title">Vistas</div>
+          <ul class="nav-list">
+            <li class="nav-item">
+              <button class="nav-btn active" data-filter="all" id="filter-all-btn">
+                <div class="nav-btn-left">
+                  <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  </svg>
+                  <span>Todas las tareas</span>
+                </div>
+                <span class="nav-count" id="count-all">0</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-filter="today" id="filter-today-btn">
+                <div class="nav-btn-left">
+                  <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <polyline points="12 7 12 12 15 15" />
+                  </svg>
+                  <span>Para hoy</span>
+                </div>
+                <span class="nav-count" id="count-today">0</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-filter="upcoming" id="filter-upcoming-btn">
+                <div class="nav-btn-left">
+                  <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                  <span>Próximas</span>
+                </div>
+                <span class="nav-count" id="count-upcoming">0</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-filter="completed" id="filter-completed-btn">
+                <div class="nav-btn-left">
+                  <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Completadas</span>
+                </div>
+                <span class="nav-count" id="count-completed">0</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Categorías / Proyectos -->
+        <div>
+          <div class="nav-section-title">
+            <span>Categorías</span>
+            <button class="column-quick-add" id="open-new-category-btn" title="Nueva Categoría">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          </div>
+          <ul class="nav-list" id="category-nav-list">
+            <!-- Dynamic Category List -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer Widget -->
+      <div class="sidebar-footer">
+        <div class="progress-widget">
+          <div class="progress-header">
+            <span class="progress-title">Progreso general</span>
+            <span class="progress-percent" id="global-progress-text">0%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="global-progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="sidebar-user-actions">
+          <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar Modo Oscuro (T)">
+            <svg id="theme-moon-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <svg id="theme-sun-icon" style="display:none;" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="5" stroke-width="2"/>
+              <line x1="12" y1="1" x2="12" y2="3" stroke-width="2" stroke-linecap="round"/>
+              <line x1="12" y1="21" x2="12" y2="23" stroke-width="2" stroke-linecap="round"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke-width="2" stroke-linecap="round"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke-width="2" stroke-linecap="round"/>
+              <line x1="1" y1="12" x2="3" y2="12" stroke-width="2" stroke-linecap="round"/>
+              <line x1="21" y1="12" x2="23" y2="12" stroke-width="2" stroke-linecap="round"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke-width="2" stroke-linecap="round"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <button class="action-icon-btn" id="shortcuts-info-btn" title="Atajos de Teclado">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <rect x="2" y="4" width="20" height="16" rx="2" stroke-width="2" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10" />
+            </svg>
+          </button>
+
+          <button class="action-icon-btn" id="backup-data-btn" title="Exportar / Importar">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Application Wrapper -->
+    <main class="main-wrapper">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <div class="view-title-group">
+            <h1 id="current-view-title">Todas las tareas</h1>
+            <span class="view-subtitle" id="current-view-subtitle">Organización y seguimiento</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Search input -->
+          <div class="search-container">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" stroke-width="2"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input type="text" class="search-input" id="search-input" placeholder="Buscar tareas...">
+            <span class="search-shortcut">/</span>
+          </div>
+
+          <!-- View Mode Switcher -->
+          <div class="view-switch-group">
+            <button class="view-switch-btn active" data-view="kanban" id="view-kanban-btn" title="Vista Tablero">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="5" height="18" rx="1" stroke-width="2"/>
+                <rect x="10" y="3" width="5" height="18" rx="1" stroke-width="2"/>
+                <rect x="17" y="3" width="5" height="18" rx="1" stroke-width="2"/>
+              </svg>
+              <span>Tablero</span>
+            </button>
+            <button class="view-switch-btn" data-view="list" id="view-list-btn" title="Vista Lista">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="8" y1="6" x2="21" y2="6" stroke-width="2" stroke-linecap="round"/>
+                <line x1="8" y1="12" x2="21" y2="12" stroke-width="2" stroke-linecap="round"/>
+                <line x1="8" y1="18" x2="21" y2="18" stroke-width="2" stroke-linecap="round"/>
+                <line x1="3" y1="6" x2="3.01" y2="6" stroke-width="2" stroke-linecap="round"/>
+                <line x1="3" y1="12" x2="3.01" y2="12" stroke-width="2" stroke-linecap="round"/>
+                <line x1="3" y1="18" x2="3.01" y2="18" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>Lista</span>
+            </button>
+          </div>
+
+          <!-- Add Task Button -->
+          <button class="btn-primary" id="open-new-task-modal-btn">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Nueva Tarea</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Viewport -->
+      <section class="content-viewport">
+        <!-- Filter Toolbar -->
+        <div class="filter-toolbar">
+          <div class="filter-pills" id="priority-filter-pills">
+            <button class="filter-pill active" data-priority="all">Todas las prioridades</button>
+            <button class="filter-pill" data-priority="urgente">Urgente</button>
+            <button class="filter-pill" data-priority="alta">Alta</button>
+            <button class="filter-pill" data-priority="media">Media</button>
+            <button class="filter-pill" data-priority="baja">Baja</button>
+          </div>
+
+          <div class="sort-container">
+            <span class="sort-label">Ordenar por:</span>
+            <select class="sort-select" id="sort-select">
+              <option value="date-asc">Fecha límite (Próximas)</option>
+              <option value="date-desc">Fecha límite (Lejanas)</option>
+              <option value="priority-desc">Prioridad (Mayor a menor)</option>
+              <option value="priority-asc">Prioridad (Menor a mayor)</option>
+              <option value="title-asc">Título (A-Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Kanban View Layout -->
+        <div class="kanban-board" id="kanban-view">
+          <!-- Column: Por Hacer -->
+          <div class="kanban-column" data-status="todo">
+            <div class="column-header">
+              <div class="column-header-left">
+                <h2 class="column-title">Por Hacer</h2>
+                <span class="column-badge" id="badge-count-todo">0</span>
+              </div>
+              <button class="column-quick-add" data-add-to="todo" title="Agregar tarea aquí">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+            <div class="column-body" id="col-todo" data-column-status="todo"></div>
+          </div>
+
+          <!-- Column: En Progreso -->
+          <div class="kanban-column" data-status="in-progress">
+            <div class="column-header">
+              <div class="column-header-left">
+                <h2 class="column-title">En Progreso</h2>
+                <span class="column-badge" id="badge-count-in-progress">0</span>
+              </div>
+              <button class="column-quick-add" data-add-to="in-progress" title="Agregar tarea aquí">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+            <div class="column-body" id="col-in-progress" data-column-status="in-progress"></div>
+          </div>
+
+          <!-- Column: Completadas -->
+          <div class="kanban-column" data-status="completed">
+            <div class="column-header">
+              <div class="column-header-left">
+                <h2 class="column-title">Completadas</h2>
+                <span class="column-badge" id="badge-count-completed">0</span>
+              </div>
+              <button class="column-quick-add" data-add-to="completed" title="Agregar tarea aquí">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+            <div class="column-body" id="col-completed" data-column-status="completed"></div>
+          </div>
+        </div>
+
+        <!-- List View Layout (Hidden by default) -->
+        <div class="list-view-container" id="list-view" style="display: none;"></div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Crear / Editar Tarea -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="task-modal-title">Nueva Tarea</h3>
+        <button class="modal-close-btn" id="close-task-modal-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form id="task-form">
+        <input type="hidden" id="task-id-field">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="task-title-field">Título de la tarea *</label>
+            <input type="text" class="form-input" id="task-title-field" placeholder="Escribe el nombre de la tarea..." required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="task-desc-field">Descripción</label>
+            <textarea class="form-textarea" id="task-desc-field" placeholder="Agrega notas o detalles relevantes..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="task-status-field">Estado</label>
+              <select class="form-select" id="task-status-field">
+                <option value="todo">Por Hacer</option>
+                <option value="in-progress">En Progreso</option>
+                <option value="completed">Completada</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="task-priority-field">Prioridad</label>
+              <select class="form-select" id="task-priority-field">
+                <option value="baja">Baja</option>
+                <option value="media" selected>Media</option>
+                <option value="alta">Alta</option>
+                <option value="urgente">Urgente</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="task-category-field">Categoría</label>
+              <select class="form-select" id="task-category-field">
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="task-due-date-field">Fecha Límite</label>
+              <input type="date" class="form-input" id="task-due-date-field">
+            </div>
+          </div>
+
+          <!-- Subtasks Builder -->
+          <div class="form-group">
+            <label class="form-label">Subtareas / Lista de verificación</label>
+            <div class="subtasks-builder-list" id="subtasks-container"></div>
+            <button type="button" class="add-subtask-action" id="add-subtask-row-btn">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Agregar subtarea</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancel-task-btn">Cancelar</button>
+          <button type="submit" class="btn-primary" id="save-task-btn">Guardar Tarea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Crear Categoría -->
+  <div class="modal-overlay" id="category-modal">
+    <div class="modal-box" style="max-width: 380px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Nueva Categoría</h3>
+        <button class="modal-close-btn" id="close-category-modal-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form id="category-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="category-name-field">Nombre de la categoría</label>
+            <input type="text" class="form-input" id="category-name-field" placeholder="Ej. Finanzas, Diseño..." required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancel-category-btn">Cancelar</button>
+          <button type="submit" class="btn-primary">Crear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Atajos de Teclado -->
+  <div class="modal-overlay" id="shortcuts-modal">
+    <div class="modal-box" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Atajos de Teclado</h3>
+        <button class="modal-close-btn" id="close-shortcuts-modal-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:var(--text-secondary);">Nueva Tarea</span>
+            <kbd style="padding: 2px 6px; background:var(--badge-bg); border:1px solid var(--border-default); border-radius:4px; font-weight:600;">N</kbd>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:var(--text-secondary);">Buscar</span>
+            <kbd style="padding: 2px 6px; background:var(--badge-bg); border:1px solid var(--border-default); border-radius:4px; font-weight:600;">/</kbd>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:var(--text-secondary);">Alternar Modo Oscuro</span>
+            <kbd style="padding: 2px 6px; background:var(--badge-bg); border:1px solid var(--border-default); border-radius:4px; font-weight:600;">T</kbd>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:var(--text-secondary);">Cerrar Ventana</span>
+            <kbd style="padding: 2px 6px; background:var(--badge-bg); border:1px solid var(--border-default); border-radius:4px; font-weight:600;">Esc</kbd>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" id="dismiss-shortcuts-btn">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Respaldo / Exportación -->
+  <div class="modal-overlay" id="backup-modal">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Gestión de Datos</h3>
+        <button class="modal-close-btn" id="close-backup-modal-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <h4 style="font-size: 13.5px; font-weight: 600; margin-bottom: 4px;">Exportar Datos</h4>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Descarga todas tus tareas y categorías en un archivo JSON para respaldo.</p>
+            <button type="button" class="btn-secondary" id="export-json-btn">Descargar Copia de Seguridad</button>
+          </div>
+          <hr style="border: none; border-top: 1px solid var(--border-subtle);">
+          <div>
+            <h4 style="font-size: 13.5px; font-weight: 600; margin-bottom: 4px;">Importar Datos</h4>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Restaura tareas desde un archivo JSON previamente exportado.</p>
+            <input type="file" id="import-json-input" accept=".json" style="display: none;">
+            <button type="button" class="btn-secondary" id="trigger-import-btn">Seleccionar Archivo JSON</button>
+          </div>
+          <hr style="border: none; border-top: 1px solid var(--border-subtle);">
+          <div>
+            <h4 style="font-size: 13.5px; font-weight: 600; margin-bottom: 4px;">Restablecer Tareas</h4>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Vuelve a cargar los datos de demostración predeterminados.</p>
+            <button type="button" class="btn-secondary" id="reset-demo-data-btn">Restaurar Datos de Demostración</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" id="dismiss-backup-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
