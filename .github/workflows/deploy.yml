@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 1. Clonar repositorio
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 2. Desplegar a GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./index.html
-          
+          publish_branch: gh-pages
+          publish_dir: .
+          force_orphan: false
