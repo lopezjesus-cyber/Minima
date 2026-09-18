@@ -1,26 +1,30 @@
-name: Deploy a GitHub Pages
+name: Deploy to InfinityFree
 
 on:
   push:
     branches:
       - main
-      - Minima
-
-permissions:
-  contents: write
+  workflow_dispatch:
 
 jobs:
   deploy:
+    name: FTP Deployment
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: 1. Clonar repositorio
         uses: actions/checkout@v4
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: .
-          force_orphan: false
+          fetch-depth: 0
+
+      - name: 2. Subir archivos a InfinityFree por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER || 'ftpupload.net' }}
+          username: ${{ secrets.FTP_USERNAME || 'if0_42953100' }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: htdocs/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            README.md
